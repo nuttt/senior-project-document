@@ -25,7 +25,7 @@ In order to conduct researches, they have collect precipitation data by installi
 
 Sometimes, incorrect data is reported from the telemetry systems such as minus value of cumulative rainfall level, or river’s water level suddenly changed from one level to another, which are not possible. In addition, data loss can also be occurred due to poor cellular network in rural area. These inconsistent data is not suitable to be used in researches since it might lead to inaccurate results.
 
-To filtered out incorrect data efficiently, …
+To filtered out incorrect data efficiently, our previous work called “Controlling Quality of Water-Level Data in Thailand”[5] proposed algorithms to detect anomalies in water level data, which includes outliers, inhomogeneity, and missing pattern algorithm. Example of anomaly data detected by these algorithms is illustrated in **Figure 1**, **Figure 2**, and **Figure 3**. However, when we implement this algorithm to use with real water level data, a problem arise. Since HAII use R as a main programming languages for all data analytic tasks, implementing outliers and missing pattern algorithm leads to O(n^2) in complexity. This inefficiency is originated from two main points. First, The bottleneck of both algorithms is occurred from clustering algorithm. 
 
 
 
