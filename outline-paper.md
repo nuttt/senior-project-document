@@ -25,7 +25,7 @@ In order to conduct researches, They have collect precipitation data by installi
 
 Sometimes, incorrect data is reported from the telemetry systems such as minus value of cumulative rainfall level, or river’s water level suddenly changed from one level to another, which is not possible. In addition, data loss can be occurred due to poor cellular network in rural area. These inconsistent value is not suitable to be used in researches since it might lead to inaccurate results.
 
-	To filtered out incorrect data efficiently, …
+To filtered out incorrect data efficiently, …
 
 
 
