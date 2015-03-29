@@ -29,7 +29,7 @@ To filtered out incorrect data efficiently, our previous work called “Controll
 
 This paper aim to propose an improvement in outliers and missing pattern algorithms for large-scale water level data. Our main goal is to refine both algorithm to be simple, yet expeditious, while bring out the same results as our previous work. We have reduce running time of outliers algorithm from `O(n^2)` or `O(n lg n)`, depends on data structures, `to O(n)`. Also, missing pattern is decresed from `O(n^2)` or `O(n lg^2 n)` to `O(n lg n)`. This can be  done by imitating the clustering result with more simple and fast approach which we will discuss later. The experimental result revealed that our approach significantly cut s down the overall running time in large-scale data.
 
-	The paper is organized as follows. Sections 2 describes how data was collected at HAII. Sections 3 recaps our previous work and points out problems. Our approach to refine the both algorithms are illustrated in Section 4. Experiment results are shown in Section 5. Last, Section 6 delivers a conclusion.
+The paper is organized as follows. Sections 2 describes how data was collected at HAII. Sections 3 recaps our previous work and points out problems. Our approach to refine the both algorithms are illustrated in Section 4. Experiment results are shown in Section 5. Last, Section 6 delivers a conclusion.
 
 ## Large-Scale Water Level Data
 
