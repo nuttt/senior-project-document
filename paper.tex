@@ -1,5 +1,5 @@
 \documentclass[conference]{IEEEtran}
-\usepackage{blindtext, graphicx}
+\usepackage{blindtext, graphicx, algpseudocode, float}
 
 
 % correct bad hyphenation here
@@ -67,22 +67,47 @@ Thailand has faced many dreadful climate-related disaster including floods, drou
 
 To handle these disaster, the government established many organization to cooperatively counteract with it. One of the organization is Hydro and Agro Informatics Institute (HAII). HAII’s main focus is to research and utilize knowledge in agricultural and water resource management to confront the climate disaster [2].
 
-In order to conduct researches, they have collect precipitation data by installing telemetry systems across Thailand. The telemetry system is a device that is used to collect physical, chemical, and biological data from its various sensors [3]. For instance, river’s water level, rainfall level, humidity, and temperature can be measured. Today, HAII have already installed over 800 telemetry systems. The data collected from the telemetry systems is sent back to HAII’s server by using GPRS cellular network [4].
+In order to conduct researches, they have collected precipitation data by installing telemetry systems across Thailand. The telemetry system is a device that is used to collect physical, chemical, and biological data from its various sensors [3]. For instance, river’s water level, rainfall level, humidity, and temperature can be measured. Today, HAII have already installed over 800 telemetry systems. The data collected from the telemetry systems is sent back to HAII’s server by using GPRS cellular network [4].
 
 Sometimes, incorrect data is reported from the telemetry systems such as minus value of cumulative rainfall level, or river’s water level suddenly changed from one level to another, which are not possible. In addition, data loss can also be occurred due to poor cellular network in rural area. These inconsistent data is not suitable to be used in researches since it might lead to inaccurate results.
 
 To filtered out incorrect data efficiently, our previous work called “Controlling Quality of Water-Level Data in Thailand” proposed algorithms to detect anomalies in water level data, which includes outliers, inhomogeneity, and missing pattern algorithm [5]. Example of anomaly data detected by these algorithms is illustrated in Figure 1, Figure 2, and Figure 3. However, when we implement this algorithm to use with real precipitation level data, a problem arise. Since HAII use `R` as a main programming languages for all data analytic tasks, implementing outliers and missing pattern algorithm may leads to $O(n^2)$ in complexity. This inefficiency is originated from two main points. First, The bottleneck of both algorithms is occurred from clustering algorithm. The previous work use \textit{DBSCAN} [6] as the clustering algorithm which have $O(n^2)$ complexity if it is a naive implementation and $O(n\log{n})$ if it is implemented using special data structures that support fast region query such as \textit{R*-Tree} or \textit{k-d Tree} , which seem to be much more complex. Second, Our last work is implemented in HAII using \texttt{R} library called \texttt{fpc} which contains \textit{DBSCAN} library that have $O(n^2)$ complexity [7]. Thus, the overall algorithms’ complexity become $O(n^2)$.
 
-This paper aim to propose an improvement in outliers and missing pattern algorithms for large-scale water level data. Our main goal is to refine both algorithm to be simple, yet expeditious, while bring out the same results as our previous work. We have reduce running time of outliers algorithm from $O(n^2)$ or $O(n lg n)$, depends on data structures, to $O(n)$. Also, missing pattern is decresed from $O(n^2)$ or $O(n \log{n}^2)$ to $O(n \log{n})$. This can be  done by imitating the clustering result with more simple and fast approach which we will discuss later. The experimental result revealed that our approach significantly cut s down the overall running time in large-scale data.
+This paper aim to propose an improvement in outliers and missing pattern algorithms for large-scale water level data. Our main goal is to refine both algorithm to be simple, yet expeditious, while bring out the same results as our previous work. We have reduce running time of outliers algorithm from $O(n^2)$ or $O(n \log{n})$, depends on data structures, to $O(n)$. Also, missing pattern is decresed from $O(n^2)$ or $O(n \log^2{n})$ to $O(n \log{n})$. This can be  done by imitating the clustering result with more simple and fast approach which we will discuss later. The experimental result revealed that our approach significantly cut s down the overall running time in large-scale data.
 
 The paper is organized as follows. Section 2 describes how data was collected at HAII. Section 3 recaps our previous work and points out problems. Our approach to refine the both algorithms are illustrated in Section 4. Experiment results are shown in Section 5. Last, Section 6 delivers a conclusion.
 
+\section{Large-Scale Water Level Data}
+
+Currently, Hydro and Agro Informatics Institute (HAII) have already installed over 800 telemetry system across Thailand. Figure 4 shows example of location where telemetry systems were installed. Each system send data from its many sensors back to central database every 10 minutes via cellular network. From these numbers, we can estimate that there are 3.45 million records of data added to database every month. Since, HAII have collected precipitation data for over 5 years, we can assume that we are dealing with approximately 207 million records. In previous paper, we use water level data for both outliers and missing pattern algorithms. Moreover, because of the nature of water level in the river, water level's value should be continuous without sudden change.
+
 \section{Previous Data Quality Management}
 
-Currently, Hydro and Agro Informatics Institute (HAII) have already installed over 800 telemetry system across Thailand. Each system send data from its many sensors back to central database every 10 minutes via cellular network. From these figure, we can estimate that there are 3.45 million records of data added to database every month.
+Our previous work proposed two algorithms to control quality of water-level data, outliers and missing pattern. Both of the algorithms apply clustering technique in order to detect anomaly data and pattern of data. DBSCAN was selected as a clustering algorithms.
+
+\subsection{Outliers Detection Algorithm}
+In previous work, we detect outliers by directly applies \textit{DBSCAN} to water-level data. \textit{DBSCAN}'s required parameters, minimum number of points \textit{minpts} and distance epsilon \textit{eps}. Figure \ref{fig:outliers_pseudocode} illustrates pseudocode of outliers detection algorithm.
+
+\begin{figure}[H]
+\begin{algorithmic}[1]
+
+\Procedure{Outliers-Detection}{$d$}
+\State $minpts\gets1$
+\State $eps\gets1.5 $
+\State $C\gets\emptyset$\Comment{Set of cluster of data}
+\State $N\gets\emptyset$\Comment{Set of noise data}
+\State $C, N \gets $\Call{DBSCAN}{$d, minpts, eps$}
+\State \Return{$N$}
+\EndProcedure
+\end{algorithmic}
+\caption{Pseudocode of outliers detection algorithm.}
+\label{fig:outliers_pseudocode}
+\end{figure}
+
+\subsection{Missing Pattern Algorithm}
+Lorem Ipsum
 
 \section{Proposed Improved Algorithms}
-
 Lorem Ipsum
 
 \section{Experiments}

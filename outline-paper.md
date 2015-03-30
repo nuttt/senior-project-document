@@ -33,9 +33,15 @@ The paper is organized as follows. Sections 2 describes how data was collected a
 
 ## Large-Scale Water Level Data
 
-Currently, Hydro and Agro Informatics Institute (HAII) have already installed over 800 telemetry system across Thailand. Each system send data from its many sensors back to central database every 10 minutes via cellular network. From these figure, we can estimate that there are 3.45 million records of data added to database every month.
+Currently, Hydro and Agro Informatics Institute (HAII) have already installed over 800 telemetry system across Thailand. Figure 4 shows example of location where telemetry systems were installed. Each system send data from its many sensors back to central database every 10 minutes via cellular network. From these figure, we can estimate that there are 3.45 million records of data added to database every month. Since, HAII have collected precipitation data for over 5 years, we can assume that we are dealing with approximately 207 million records. In this paper, we use water level data for both outliers and missing pattern algorithms. Moreover, because of the nature of water level in the river, water level’s value should be continuous without sudden change.
 
 ## Previous Data Quality Management
+
+Our previous work proposed two algorithms to control quality of water-level data, outliers and missing pattern. Both of the algorithms apply clustering technique in order to detect anomaly data and pattern of data. DBSCAN was selected as a clustering algorithms.
+
+### Outliers Algorithm
+
+### Missing Pattern Algorithm
 
 ## Proposed Improved Algorithms 
 
