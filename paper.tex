@@ -1,7 +1,6 @@
 \documentclass[conference]{IEEEtran}
 \usepackage{blindtext, graphicx, algpseudocode, float, color, amsmath}
 
-
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor com-plexi-ty}
 
@@ -33,64 +32,64 @@ Email: kanoksri@haii.or.th
 
 \begin{abstract}
 %\boldmath
-Extremely change in precipitation level such as water level can cause severe damage. In order to acknowledge changes, Hydro and Agro Informatics Institute has installed telemetry system across Thailand to collect and analyze precipitation level. However, to use its data in researching, incorrect data must be filtered. In previous work, we successfully detect various problems in water level data accurately. Still, outliers detection algorithm  and missing pattern algorithm proposed in the previous work still room for improvement in terms of running time and ease of implementation. One of problems is that both algorithms is relied on complicated clustering which is unnecessary. In this paper, we propose to improve the clustering algorithm used in the previous work for water-level data. A linear clustering algorithm is invented and used to replace the old clustering algorithm. As a result, we can speed up the outliers detection algorithm and hold the same running time on missing pattern algorithm but increase simplicity and ease of implementation. Moreover, compared with the previous work we measure actual running time of our algorithms and found that they significantly help reduce the running time.
+Extremely change in precipitation level such as water level can cause severe damage. In order to acknowledge changes, Hydro and Agro Informatics Institute has installed telemetry system across Thailand to collect and analyze precipitation level. However, to use its data in researching, incorrect data must be filtered. In previous work, we successfully detect various problems in water level data accurately. Still, outliers detection algorithm  and missing pattern detection algorithm proposed in the previous work still have room for improvement in terms of running time and ease of implementation. One of problems is that both algorithms rely complicated clustering which is unnecessary. In this paper, we propose the improvement of clustering algorithm used in the previous work for water-level data. A linear clustering algorithm is invented and used to replace the old clustering algorithm. As a result, we can speed up the outliers detection algorithm and hold the same running time on missing pattern detection algorithm but increase simplicity and ease of implementation. Moreover, compared with the previous work, we measure actual running time of our algorithms and found that linear clustering algorithm significantly help reduce the running time for outliers detection algorithm.
 
 \end{abstract}
 
 \begin{IEEEkeywords}
-\color{red} Do, not, forget, to, insert, keyword, here
+Data quality control, outlier detection, missing pattern detection, data improvement, clustering
 \end{IEEEkeywords}
 
 \IEEEpeerreviewmaketitle
 
 \section{Introduction} \label{sec:intro}
 
-Thailand has faced many dreadful climate-related disaster including floods, droughts, and tropical cyclones. They have happened year after year and cause severe loss. For example, In 2011, seasonal flooding results in US\$ 45.7 billion damage to Thailand’s economy, which is 1.1\% of the country’s GDP [1]. Also, the climate-related disaster bring difficulties to agriculture and industry, which are backbones of Thailand economy. To handle these disaster, the government established many organization to cooperatively counteract with it. One of the organization is Hydro and Agro Informatics Institute (HAII). HAII's main focus is to research and utilize knowledge in agricultural and water resource management to confront the climate disaster [2].
+Thailand has faced many dreadful climate-related disaster including floods, droughts, and tropical cyclones. They have happened year after year and cause severe loss. For example, in 2011, seasonal flooding results in US\$ 45.7 billion damage to Thailand's economy, which is 1.1\% of the country's GDP \cite{bangkokpost2011}. Also, the climate-related disaster bring difficulties to agriculture and industry, which are backbones of Thailand's economy. To handle these disaster, the government established many organization to cooperatively counteract with it. One of the organization is Hydro and Agro Informatics Institute (HAII). HAII's main focus is to research and utilize knowledge in agricultural and water resource management to confront the climate disaster \cite{haiibg}.
 
-In order to conduct researches, they have collected precipitation data by installing telemetry systems across Thailand. The telemetry system is a device that is used to collect physical, chemical, and biological data from its various sensors [3]. For instance, river’s water level, rainfall level, humidity, and temperature can be measured. Currently, Hydro and Agro Informatics Institute (HAII) have already installed over 800 telemetry system across Thailand. Fig. \ref{fig:tele_station_map} shows example of location where telemetry systems were installed. Each system send data from its many sensors back to central database every 10 minutes via cellular network. And, all of the data is stored order by timestamp. From these numbers, we can estimate that there are 3.45 million records of data added to database every month. Since HAII have collected precipitation data for over 5 years, we can assume that we are dealing with approximately 207 million records.
-
-\begin{figure}
-	\includegraphics[width=\linewidth]{map.png}
-	\caption{Map of Thailand indicates where telemetry system was installed.}
-	\label{fig:tele_station_map}
-\end{figure}
-
-Sometimes, incorrect data is reported from the telemetry systems such as minus value of cumulative rainfall level, or river’s water level suddenly changed from one level to another, which are not possible. In addition, data loss can also be occurred due to poor cellular network in rural area. These inconsistent data is not suitable to be used in researches since it might lead to inaccurate results.
-
-To filtered out incorrect data efficiently, our previous work [5] proposed algorithms to detect anomalies in water level data, which includes outliers, and missing pattern algorithm. Example of anomaly data detected by these algorithms is illustrated in Fig. \ref{fig:example_outliers}, and Fig. \ref{fig:example_missingpattern}. However, both outliers detection algorithms and missing pattern is heavily relied on clustering algorithm. \textit{DBSCAN} algorithm is used to do the clustering task. The \textit{DBSCAN} itself have $O(n\log{n})$ running time if it is implemented using special data structures that support region query such as \textit{R*-Tree} or \textit{k-d Tree}, which seem to be very complex, and it have $O(n^2)$ running time if no special data is used. This can cause outlier detection algorithm's running time rise up to $O(n\log{n})$ or $O(n^2)$, which is not quite suitable for over 200 million records of data. Moreover it unnecessarily add complication and time used in implementing both algorithms. Also, real runtime might be slow due to overhead of the algorithms.
-
-In this paper, we proposed to improve the clustering algorithm in the previous work for water-level data. A linear clustering algorithm is invented and used to replace \textit{DBSCAN} clustering. The linear clustering algorithm helps improve both outliers detection algorithm and missing pattern algorithm for water-level data. As a result, the linear clustering algorithm helps increase speed and simplicity, yet maintain same accuracy of the algorithms. The outliers detection algorithm's running time is dwindled to $O(n)$. The missing pattern algorithm also achieves faster real running-time, even though holds the same theoretical running-time as previous work at $O(n\log{n})$.
+In order to conduct researches, they have collected precipitation data by installing telemetry systems across Thailand. The telemetry system is a device that is used to collect physical, chemical, and biological data from its various sensors \cite{haiits}. For instance, river's water level, rainfall level, humidity, and temperature can be measured. Currently, Hydro and Agro Informatics Institute (HAII) has already installed over 800 telemetry systems across Thailand. Fig. \ref{fig:tele_station_map} shows localtion of installed telemetry systems. Each system send data from its many sensors back to central database every 10 minutes via cellular network. And, all of the data is stored order by timestamp. From these numbers, we can estimate that there are 3.45 million records of data added to database every month. Since HAII has collected precipitation data for over 5 years, we can assume that we are dealing with approximately 207 million records.
 
 \begin{figure}
-	\includegraphics[width=\linewidth]{figure1.png}
-	\caption{Example of data with outliers.}
-	\label{fig:example_outliers}
+  \includegraphics[width=\linewidth]{map.png}
+  \caption{Map of Thailand indicates where telemetry system was installed.}
+  \label{fig:tele_station_map}
+\end{figure}
+
+Sometimes, incorrect data are reported from the telemetry systems such as a minus value of cumulative rainfall level, or an instantaneous change of river's water level, which are not possible. In addition, data loss can also be occurred due to poor cellular network in rural area. These inconsistent data is not suitable to be used in researches since it might lead to inaccurate results.
+
+To filtered out incorrect data efficiently, our previous work \cite{markpeng2014controlling} proposed algorithms to detect anomalies in water level data, which includes outliers detection algorithm, and missing pattern detection algorithm. Example of anomaly data detected by these algorithms is illustrated in Fig. \ref{fig:example_outliers}, and Fig. \ref{fig:example_missingpattern}. However, both outliers detection algorithm and missing pattern detection algorithm is heavily relied on clustering algorithm. \textit{DBSCAN} algorithm \cite{ester1996density} is used to do the clustering task. The \textit{DBSCAN} itself has $O(n\log{n})$ running time if it is implemented using data structures that support two dimensional region query such as \textit{R*-Tree} \cite{beckmann1990r} or \textit{k-d Tree} \cite{bentley1975multidimensional}, which seem to be very complex, and it has $O(n^2)$ running time if no sophisticated data structures is used. This causes outlier detection algorithm's running time rise up to $O(n\log{n})$ or $O(n^2)$, which is not quite suitable for over 200 million records of data. Moreover it unnecessarily adds complication and time used in implementing both algorithms.
+
+In this paper, we proposed to improve the clustering algorithm in the previous work for water-level data. A linear clustering algorithm is invented and used to replace \textit{DBSCAN} clustering. The linear clustering algorithm helps improve both outliers detection algorithm and missing pattern detection algorithm for water-level data. As a result, the linear clustering algorithm helps increase speed and simplicity, yet maintain same accuracy of the algorithms. The outliers detection algorithm's running time is dwindled to $O(n)$. The missing pattern detection algorithm also holds the same running-time as previous work at $O(n\log{n})$.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{figure1.png}
+  \caption{Example of data with outliers.}
+  \label{fig:example_outliers}
 \end{figure}
 
 \begin{figure}
-	\includegraphics[width=\linewidth]{figure3.png}
-	\caption{Example of data with missing pattern. X-axis represent date of the data. Y-axis indicate hour of day of the data. The lighter area shows date and hour where data was missing.}
-	\label{fig:example_missingpattern}
+  \includegraphics[width=\linewidth]{figure3.png}
+  \caption{Example of data with missing pattern. X-axis represent date of the data. Y-axis indicate hour of day of the data. The lighter area shows date and hour where data was missing.}
+  \label{fig:example_missingpattern}
 \end{figure}
 
-The paper is organized as follows. Section \ref{sec:previous} recaps our previous work and points out its running time. Our approach to refine the both algorithms are illustrated in Section \ref{sec:propose}. Experiment results are shown in Section \ref{sec:xperiments}. Last, Section \ref{sec:conclusion} delivers a conclusion.
+The paper is organized as follows. Section \ref{sec:previous} recaps our previous work and points out its running time. Our approach to refine the both algorithms using linear clustering algorithm are illustrated in Section \ref{sec:propose}. Experiment results are shown in Section \ref{sec:xperiments}. Last, Section \ref{sec:conclusion} delivers a conclusion.
 
 \section{Previous Data Quality Management\\and Its Running Time} \label{sec:previous}
 
-Our previous work proposed two algorithms to control quality of water-level data, outliers and missing pattern. Both of the algorithms apply clustering technique in order to detect anomaly data and pattern of data. DBSCAN was selected as a clustering algorithms. Note that for the time dimension, 10 minutes will be counted as a distance of 1 unit because data points is captured in 10 minutes interval and dataset is already sorted by timestamp.
+Our previous work proposed two algorithms to control quality of water-level data, outliers detection algorithm and missing pattern detection algorithm. Both of the algorithms apply clustering technique in order to detect anomaly data and pattern of data. DBSCAN was selected as a clustering algorithms. Note that for the time dimension, 10 minutes will be counted as a distance of 1 unit because data points are captured in 10 minutes interval and data are already sorted by timestamp.
 
 In each subsection, since our previous previous work has not stated about the running time yet, we will brief each algorithm, illustrate its pseudocode, and analyze its running time in order to later refine both algorithms.
 
 \subsection{Outliers Detection Algorithm}
-In previous work, we detect outliers by directly applies \textit{DBSCAN} to water-level data. \textit{DBSCAN}'s required parameters, minimum number of points \textit{minpts} and distance epsilon \textit{eps}, is set to 3 and 1.05 respectively in order to classify data which have extreme difference in value compared to adjacent data as a noise. Fig. \ref{fig:outliers_pseudocode} illustrates pseudocode of outliers detection algorithm. $C$ is an array of cluster index. Data point $d_{i}$ is in $k$-th cluster if $C_{i} = k$ and $k \neq 0$. If $k = 0$, $d_{i}$ is considered as a noise. $N$ is an array storing index of noise data. If $C_{i} = 0$, then $i \in N$.
+In previous work, we detect outliers by directly applies \textit{DBSCAN} to water-level data. \textit{DBSCAN}'s required parameters, minimum number of points \textit{minpts} and distance epsilon \textit{eps}, is set to 3 and 1.05 respectively in order to classify data which have extreme difference in value compared to adjacent data as a noise. Fig. \ref{fig:outliers_pseudocode} illustrates a pseudocode of outliers detection algorithm. $C$ is an array of cluster index. Data point $d_{i}$ is in $k$-th cluster if $C_{i} = k$ and $k \neq 0$. If $k = 0$, $d_{i}$ is considered as a noise. $N$ is an array storing index of noise data. If $C_{i} = 0$, then $i \in N$.
 
 \begin{figure}
 \begin{algorithmic}[1]
 \Procedure{Detect-Outliers}{$d$}
 \State $minpts\gets3$
 \State $eps\gets1.05 $
-\State $C\gets\emptyset$\Comment{Set of cluster of data index}
-\State $N\gets\emptyset$\Comment{Set of noise data index}
+\State $C\gets\emptyset$
+\State $N\gets\emptyset$
 \State $C, N \gets $\Call{DBSCAN}{$d, minpts, eps$}
 \State \Return{$N$}
 \EndProcedure
@@ -99,13 +98,13 @@ In previous work, we detect outliers by directly applies \textit{DBSCAN} to wate
 \label{fig:outliers_pseudocode}
 \end{figure}
 
-From pseudocode in Fig. \ref{fig:outliers_pseudocode}, it is obvious that running time of \textsc{Detect-Outliers} is based on \textsc{DBSCAN}. Thus, we can conclude that \textsc{Detect-Outliers} complexity is $O(n^2)$ or $O(n\log{n})$ -- depends on the data structure inside \textsc{DBSCAN}.
+From the pseudocode in Fig. \ref{fig:outliers_pseudocode}, it is obvious that running time of \textsc{Detect-Outliers} is based on \textsc{DBSCAN}. Thus, we can conclude that \textsc{Detect-Outliers} complexity is $O(n^2)$ or $O(n\log{n})$ -- depends on the data structure inside \textsc{DBSCAN}.
 
-\subsection{Missing Pattern Algorithm}
+\subsection{missing pattern detection algorithm}
 
-Proposed in previous work, missing pattern algorithm is used to detect pattern of missing data. There are many steps required in missing pattern algorithm. First, it convert water-level data into frequency domain, which count how many data is missing during each hour ($f_{0} ,f_{1}, \ldots, f_{23}$). Second, we use DBSCAN to analyze the frequency. If there are more than one cluster detected, there must be at least two hours having significantly different missing frequency $(f_{i})$. Then, we determine whether it contains missing pattern in overall data. Next, divided-and-conquer technique was applied to find missing pattern in subset of data. Last, we merge overlapped missing result together.
+Proposed in previous work, missing pattern detection algorithm is used to detect pattern of missing data. There are many steps required in missing pattern detection algorithm. First, it converts water-level data into frequency domain, which count how many data is missing during each hour ($f_{0} ,f_{1}, \ldots, f_{23}$). If there is at least one data point in hour $i$ of some particular day, that hour $i$ of the day will not be considered as missing. Second, we use DBSCAN to analyze the frequency. If there are more than one cluster detected, there must be at least two hours having significantly different missing frequency $(f_{i})$. Then, we determine whether it contains missing pattern in overall data. Next, divided-and-conquer technique is applied to find missing pattern in subset of data. Last, we merge overlapped missing result together.
 
-To be easier to explain, we rewrite its pseudocode from previous work in figure \ref{fig:missingpattern_pseudocode}. Result of \textsc{Missing-Pattern} procedure is returned as a list of tuples indicating start date and end date of pattern. Also, list is always sorted by start date of tuples.
+To make it easier to explain, we rewrite its pseudocode from previous work in Fig. \ref{fig:missingpattern_pseudocode}. Results of \textsc{Missing-Pattern} procedure are returned as a list of tuples indicating start date and end date of pattern. Also, list is always sorted by start date of tuples.
 
 \begin{figure}
 \begin{algorithmic}[1]
@@ -114,11 +113,10 @@ To be easier to explain, we rewrite its pseudocode from previous work in figure 
 \State\Return{$\emptyset$}\Comment{Too few data}
 \EndIf
 \State $f \gets$ \Call{Hourly-Missing-Frequency}{$d$}
-\State $minpts \gets 1$
-\State $eps \gets \frac{|d|}{2}$
+\State $minpts \gets 1$\Comment{no noise}
+\State $eps \gets 0.5 \cdot $\Call{Max-Freq-Possible}{$d$}
 \State $C, N \gets$ \Call{DBSCAN}{$f, minpts, eps$}
-\State $C' \gets \text{ array of all } C_{i} \neq 0$
-\State $\textit{haveOverallMP} \gets \Call{Unique}{C'} \ge 2$ \Comment{at least 2 clusters}
+\State $\textit{haveOverallMP} \gets |\Call{Unique}{C}| \ge 2$ \Comment{at least 2}
 \State
 \State $P_{l} \gets $\Call{Missing-Pattern}{$d_{1} \ldots d_{\frac{|d|}{2}}$}
 \State $P_{r} \gets$ \Call{Missing-Pattern}{$d_{\frac{|d|}{2}+1} \ldots d_{|d|}$}
@@ -128,40 +126,40 @@ To be easier to explain, we rewrite its pseudocode from previous work in figure 
 \State \Return{\Call{Merge-Overlap-Pattern}{$P, \textit{mergeGap}$}}
 \EndProcedure
 \end{algorithmic}
-\caption{Pseudocode of missing pattern algorithm.}
+\caption{Pseudocode of missing pattern detection algorithm.}
 \label{fig:missingpattern_pseudocode}
 \end{figure}
 
 From Fig. \ref{fig:missingpattern_pseudocode}, \textsc{Hourly-Missing-Frequency} on line 5 can be done in $O(|d|)$ by using counting sort with 24 bucket representing missing frequency of each hour of day ($f_{0},\ldots,f_{23}$). \textsc{Combine-Result} on line 14 is done in $O(1)$ by checking 8 possible cases. And, \textsc{Merge-Overlap-Pattern} could be executed in $O(|d|)$. Since the tuples in $P$ is sorted and not literally overlap, we can sequentially check each adjacent pair of tuples whether it should be merged. For the \textit{DBSCAN} in line 8, since $f$ always have 24 elements, the \textit{DBSCAN} always has $O(1)$ running time.
 
-Since it uses divide-and-conquer, We can compute the complexity of by using \textit{master method}, which the complexity of algorithm can be represent in:
+Since it uses divide-and-conquer, We can compute the complexity by using \textit{master method} \cite{clrs}, which the complexity of algorithm can be represent in:
 
 \[
 T(n) = aT(\frac{n}{b}) + f(n)
 \]
 
-For missing pattern algorithm, $f(n)$ is equal to $O(n)$, which is the slowest running time in each recurrence. By applying \textit{master method}, running time of the algorithm is:
+For missing pattern detection algorithm, $f(n)$ is equal to $O(n)$, which is the slowest running time in each recurrence. By applying \textit{master method}, running time of the algorithm is:
 
 \[
 \begin{array}{lcl}
-T(n) & = & 2T(\frac{n}{2}) + O(n \log{n})\\
+T(n) & = & 2T(\frac{n}{2}) + O(n)\\
      & = & O(n \log{n})
 \end{array}
 \]
 
-Even though the clustering algorithm is already has $O(1)$ running time, we think that using \textit{DBSCAN} for only 24 data points is unnecessary and contain huge overhead. Also, if we need to implement the \textit{DBSCAN} ourselves, it is too complicated to be use with only 24 data points.
+Even though the clustering algorithm is already has $O(1)$ running time, we think that using \textit{DBSCAN} for only 24 data points is unnecessary. Also, if we need to implement the \textit{DBSCAN} ourselves, it is too complicated to be use with only 24 data points.
 
 \section{Proposed Improved Algorithms} \label{sec:propose}
 
-Our proposed algorithms aim to solve the bottleneck in outliers detection algorithm and simplify the clustering in missing pattern algorithm. To do that, we try to create a new clustering algorithm which can imitate \textit{DBSCAN}'s result but with more efficiency, by using some facts about precipitation data and the algorithms themselves.
+Our proposed algorithm aims to solve the bottleneck in outliers detection algorithm and simplify the clustering in missing pattern detection algorithm. To do that, we try to create a new clustering algorithm which can imitate \textit{DBSCAN}'s result but with more efficiency, by using some facts about precipitation data and the algorithms themselves.
 
-First, since the data was captured from a sensor, we can assume that at time $t$, there will be only one $d_{t}$. This fact implies that there is no need to search for adjacent points in two dimension.
+First, since the data was captured from a sensor, we can assume that at time $t$, there will be only one $d_{t}$. This fact implies that there is no need to search for adjacent points in two dimensions.
 
-Second, outliers algorithm and missing pattern algorithm produce best result when $\textit{minpts} = 3$ and $\textit{minpts} = 1$ respectively. Let $C$ be an array of cluster index. Data point $d_{i}$ is in $k$-th cluster if $C_{i} = k$ and $k \neq 0$. If $k = 0$, $d_{i}$ is considered as a noise. We can say that if $\textit{minpts} \le 3$, following properties are always true:
+Second, outliers detection algorithm and missing pattern detection algorithm produce best result when $\textit{minpts} = 3$ and $\textit{minpts} = 1$ respectively. Let $C$ be an array of cluster index. Data point $d_{i}$ is in $k$-th cluster if $C_{i} = k$ and $k \neq 0$. If $k = 0$, $d_{i}$ is considered as a noise. We can say that if $\textit{minpts} \le 3$, following properties are always true:
 
 \begin{enumerate}
-	\item if $C_{i} = k; k \neq 0$ (\textit{$k$}-th cluster) and $|d_{i+1} - d_{i}| \le \textit{eps}$, then $C_{i+1} = k$ too.
-	\item $|\{i \mid C_{i} = k\}| \ge \textit{minpts}$ for all $k \ge 1$ 
+  \item if $C_{i} = k; k \neq 0$ (\textit{$k$}-th cluster) and $|d_{i+1} - d_{i}| \le \textit{eps}$, then $C_{i+1} = k$ too.
+  \item $|\{i \mid C_{i} = k\}| \ge \textit{minpts}$ for all $k \ge 1$ 
 \end{enumerate}
 
 The first property shows that it is suffice to determine the cluster by measure distance between adjacent pair of data points. It is true because if $\textit{minpts} = 1$, at least $d_{i}$ can form its own cluster and add $d_{i+1}$ to its cluster. If $\textit{minpts} = 2$ and $C_{i} = k$, there must be another data point $j$ where $C_{j} = k, j < i$ within distance $\textit{eps}$. So $i$ can be add freely into $k$-th cluster ($C_{i} = k$). Last, if $\textit{minpts} = 3$, since $i$ is already in $C_{k}$, there must be another data point $j $ where $C_{j} = k, j < i$ within distance $\textit{eps}$. So, if $|d_{i+1} - d_{i}| \le \textit{eps}$, $d_{i}$ will satisfy $\textit{minpts} = 3$ (including itself) condition. Thus, $i+1$ can be added into $k$-th cluster.
@@ -173,31 +171,31 @@ With this two properties, we can create an algorithm which can imitate \textit{D
 \begin{figure}
 \begin{algorithmic}[1]
 \Procedure{Linear-Cluster}{$d, minpts, eps$}
-	\State $C_{tmp} \gets \emptyset$
-	\State $C \gets \text{ array of size } |d|$
-	\State $k \gets 0$
-	\State $N \gets \emptyset$
-%	\State $n_{C_{tmp}} \gets 0$
-	\For{$i \gets 1 \text{ to } |d| + 1$}
-		\State $newCluster \gets \text{false}$
-		\If{$i = 1 \textbf{ or } i = |d|+1 \textbf{ or } |d_{i} - d_{i-1}| > eps$}
-			\State $newCluster \gets \text{true}$
-		\EndIf
-		\If{$newCluster$ and $|C_{tmp}| \ge minpts$}
-		    \State $k \gets k + 1$			    
-			\State $C_{i} \gets k$ ; $\forall i \in C_{tmp}$
-			\State $C_{tmp} \gets \emptyset$
-		\ElsIf{$newCluster$}
-			\State $C_{i} \gets 0$ ; $\forall i \in C_{tmp}$			
-			\State $N \gets N \cup C_{tmp}$
-			\State $C_{tmp} \gets \emptyset$
-		\EndIf
-		
-		\State add $i$ to $C_{tmp}$ 
-		
-	\EndFor
-	\State \Return{$C, N$}
-\EndProcedure	
+  \State $C_{tmp} \gets \emptyset$
+  \State $C \gets \text{ array of size } |d|$
+  \State $k \gets 0$
+  \State $N \gets \emptyset$
+% \State $n_{C_{tmp}} \gets 0$
+  \For{$i \gets 1 \text{ to } |d| + 1$}
+    \State $newCluster \gets \text{false}$
+    \If{$i = 1 \textbf{ or } i = |d|+1 \textbf{ or } |d_{i} - d_{i-1}| > eps$}
+      \State $newCluster \gets \text{true}$
+    \EndIf
+    \If{$newCluster$ and $|C_{tmp}| \ge minpts$}
+        \State $k \gets k + 1$          
+      \State $C_{i} \gets k$ ; $\forall i \in C_{tmp}$
+      \State $C_{tmp} \gets \emptyset$
+    \ElsIf{$newCluster$}
+      \State $C_{i} \gets 0$ ; $\forall i \in C_{tmp}$      
+      \State $N \gets N \cup C_{tmp}$
+      \State $C_{tmp} \gets \emptyset$
+    \EndIf
+    
+    \State add $i$ to $C_{tmp}$ 
+    
+  \EndFor
+  \State \Return{$C, N$}
+\EndProcedure 
 \end{algorithmic}
 \caption{Pseudocode of new clustering algorithm.}
 \label{fig:clustering_pseudocode}
@@ -205,26 +203,140 @@ With this two properties, we can create an algorithm which can imitate \textit{D
 
 From Fig. \ref{fig:clustering_pseudocode}, the pseudocode work by following steps. First, it creates a temporary cluster an assume that $d_{i}$ is in cluster (start from $d_{1}$). Then, it checks the distance to its next adjacent data point ($d_{i+1}$). If the distance is less than $eps$, put $d_{i+1}$ in the same temporary cluster. Otherwise, create new temporary cluster and assume that $d_{i+1}$ is in it. Before creating new temporary cluster, we determine whether the previous temporary cluster can be formed into real cluster by counting data points inside it. If it has more than $minpts$ points, it can be formed as a real cluster. If not, all data point inside it should be considered as noise.
 
-The \textsc{Linear-Cluster} algorithm has $O(n)$ running time even though it contains nested loop in line 6 and line 13 or 16. Since every $i$ will be a member of $C_{tmp}$ only once, line 13 and 16 will be executed only $n$ times in total. Thus, we can conclude that it has $O(n)$ running time.
+The \textsc{Linear-Cluster} algorithm has $O(n)$ running time even though it contains nested loop in line 6 and line 13 or 16. Since every $i$ is be a member of $C_{tmp}$ only once, line 13 and 16 will be executed only $n$ times in total. Thus, we can conclude that it has $O(n)$ running time.
 
-Therefore, we can replace \textit{DBSCAN} in outliers algorithm and missing pattern algorithm with \textsc{Linear-Cluster} to reduce it's overall complexity. The outliers algorithm become $O(n)$ in complexity. For missing pattern, although the clustering process already has $O(1)$ running time, but \textsc{Linear-Cluster} is far more uncomplicated compare to \textsc{DBSCAN}. This helps reduce overhead in real running time and decrease implementation time for developers.
+Therefore, we can replace \textit{DBSCAN} in outliers detection algorithm and missing pattern detection algorithm with \textsc{Linear-Cluster} to reduce it's overall complexity. The outliers algorithm become $O(n)$ in complexity. For missing pattern, although the clustering process already has $O(1)$ running time, but \textsc{Linear-Cluster} is far more uncomplicated compare to \textsc{DBSCAN}. This helps decrease implementation time for developers.
 
 
 \section{Experiments} \label{sec:xperiments}
 
-Lorem Ipsum
+We conduct two tests. First, we compare the \textsc{DBSCAN} and \textsc{Linear-Cluster} directly in order to reflect the running time of outliers detection algorithm. Second, we compare two missing pattern detection algorithm. They are identical except the clustering part. We measure the running time in second to show that missing pattern detection algorithm hold the same running time whether using \textsc{DBSCAN} or \textsc{Linear-Cluster}. The \textsc{DBSCAN} algorithm in both experiment is from \textit{fpc} library \cite{christianhennig2014} for \textit{R} language, which has $O(n^2)$ running time. And all experiments were done using \textit{R} in order to reflect real system environment at HAII.
+
+\subsection{Experiment on DBSCAN and Linear-Cluster}
+
+  In this experiment, we benchmark the running time of \textsc{DBSCAN} and \textsc{Linear-Cluster} directly. Dataset is generate by using continuous function to reflect the nature of water-level data. Then, we randomly shift some data points in order to generate outliers. Specifically, we use $y = sin(0.005x)$. Then we randomly pick 10 percent of data point and add them with random number generated using normal distribution (sd = 1). Example of generated data is shown in Fig. \ref{fig:data_ol}. We test both algorithm from 10,000 data points to 30,000 data points. A result is shown in Table \ref{table:table_ol} and Fig. \ref{fig:res_ol}. From the result, the \textsc{Linear-Cluster} is significantly faster than \textsc{DBSCAN}.
+  
+\begin{figure}
+  \includegraphics[width=\linewidth]{exp_ol_data.pdf}
+  \caption{Example of generated data (n = 1000) for first experiment.}
+  \label{fig:data_ol}
+\end{figure}
+
+  
+\begin{figure}
+  \includegraphics[width=\linewidth]{exp_ol_res.pdf}
+  \caption{Running time between \textsc{Linear-Cluster} (blue) and \textsc{DBSCAN} (red). Y-axis is plotted in binary log scale.}
+  \label{fig:res_ol}
+\end{figure}
+
+\begin{table}
+\caption{Running time in second of DBSCAN and Linear-Cluster}
+\label{table:table_ol}
+\centering
+\begin{tabular}{ccc}
+\hline
+\textbf{Number of data} & \textbf{DBSCAN} (s) & \textbf{Linear-Cluster} (s)\\
+\hline
+10,000& 21.978&0.291\\
+\hline
+12,000& 32.593&0.668\\
+\hline
+14,000& 48.419&0.513\\
+\hline
+16,000& 58.566&0.768\\
+\hline
+18,000& 78.615&1.049\\
+\hline
+20,000&105.393&1.402\\
+\hline
+22,000&128.891&1.731\\
+\hline
+24,000&156.447&2.152\\
+\hline
+26,000&186.461&2.678\\
+\hline
+28,000&221.635&3.206\\
+\hline
+30,000&261.015&3.654\\
+\hline
+\end{tabular}
+\end{table}
+  
+
+\subsection{Experiment on Missing Pattern}
+
+In this experiment, we use real data from a telemetry system. The data selected is from the telemetry station named CHI005, between October 2011 and September 2013. We feed this data into two missing pattern detection algorithm using different clustering algorithm. The algorithm is executed 10 times for each data length and mean execution time is measured. A result is shown in Table \ref{table:table_mp} and Fig. \ref{fig:res_mp}. From the result, the \textsc{Linear-Cluster} holds the same running time as \textsc{DBSCAN} with insignificant difference.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{exp_res_mp.pdf}
+  \caption{Running time of missing pattern detection algorithm using \textsc{DBSCAN} (blue, cross sign) and using \textsc{Linear-Cluster} (red, circle sign).}
+  \label{fig:res_mp}
+\end{figure}
+
+\begin{table}
+\caption{Mean running time of missing pattern detection algorithm using DBSCAN and Linear-Cluster}
+\label{table:table_mp}
+\centering
+\begin{tabular}{ccc}
+\hline
+\textbf{Length of data} (month) & \textbf{DBSCAN} (s) & \textbf{Linear-Cluster} (s)\\
+ \hline
+ 1&0.0420&0.0472\\
+ \hline
+ 2&0.1751&0.1773\\
+ \hline
+ 3&0.2111&0.2107\\
+ \hline
+ 4&0.5476&0.5480\\
+ \hline
+ 5&0.6581&0.6615\\
+ \hline
+ 6&0.7830&0.7996\\
+ \hline
+ 7&0.9129&0.9133\\
+ \hline
+ 8&1.2466&1.2711\\
+ \hline
+ 9&1.5567&1.5652\\
+\hline
+10&1.8283&1.8262\\
+\hline
+11&2.1312&2.1410\\
+\hline
+12&2.4553&2.4581\\
+\hline
+13&2.8046&2.8177\\
+\hline
+14&3.4103&3.3106\\
+\hline
+15&3.7018&3.6573\\
+\hline
+16&4.0058&3.9693\\
+\hline
+17&4.2645&4.2896\\
+\hline
+18&4.6262&4.6498\\
+\hline
+19&4.7870&4.7891\\
+\hline
+20&4.7509&4.8072\\
+\hline
+21&4.7713&4.8262\\
+\hline
+22&4.8047&4.8076\\
+\hline
+23&4.9229&4.9153\\
+\hline
+24&4.9063&4.9114\\
+\hline
+\end{tabular} 
+\end{table}
 
 \section{Conclusion} \label{sec:conclusion}
+The paper propose to improve the clustering algorithm used in both outliers detection algorithm and missing pattern detection algorithm in our previous work. The linear clustering algorithm is created to replace DBSCAN. Outliers detection algorithm now have better running time at $O(n)$. Also, missing pattern detection algorithm holds the same running time at $O(n \log{n})$. Moreover, we conduct experiments to compare the running time of both algorithms. The result conform to the theoretical running time.
 
-Lorem Ipsum
-
-\begin{thebibliography}{1}
-
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
-
-\end{thebibliography}
+\bibliographystyle{IEEEtran}
+\bibliography{paper}
 
 \end{document}
 
